@@ -11,21 +11,22 @@ import RxCocoa
  
 //MARK: Currency View Model
 protocol CurrencyViewModel {
+    var rateDidLoad: Observable<ExchangeEntity> { get }
+    var showAlert: Observable<String> { get }
+    
     var pickerViewNumberOfRowsInComponent: Int { get }
     func pickerViewTitleForRow(row: Int) -> String
     
     var collectionViewNumberOfItems: Int { get }
     func getBalanceInfo(with index: Int) -> String
     
+    var isSell: Bool { get set }
+    func getSelectedCurrency(row: Int) -> Currency
     func submitButtonTapped(amount: Decimal)
-    
-    var rateDidLoad: Observable<ExchangeEntity> { get }
-    var showAlert: Observable<String> { get }
 }
 
 //MARK: Default Currency View Model
 final class DefaultCurrencyViewModel {
-
     //MARK: Properties
     var rateDidLoad: Observable<ExchangeEntity>
     var showAlert: Observable<String>
@@ -38,6 +39,7 @@ final class DefaultCurrencyViewModel {
         .jpy: 0
     ]
     
+    var isSell: Bool = false
     private var currentSellCurrency: Currency = .eur
     private var currentBuyCurrency: Currency = .usd
     private var availableBuyCurrencies: [Currency] = []
@@ -68,12 +70,15 @@ final class DefaultCurrencyViewModel {
 }
 
 extension DefaultCurrencyViewModel: CurrencyViewModel {
+    //MARK: Currency View Model Protocol
     var pickerViewNumberOfRowsInComponent: Int {
-        Currency.allCases.count
+        filterAvailableCurrencies()
+        let currencies = isSell ? availableSellCurrencies : availableBuyCurrencies
+        return currencies.count
     }
     
     func pickerViewTitleForRow(row: Int) -> String {
-        Currency.allCases[row].rawValue
+        isSell ? availableSellCurrencies[row].rawValue : availableBuyCurrencies[row].rawValue
     }
     
     var collectionViewNumberOfItems: Int {
@@ -85,36 +90,70 @@ extension DefaultCurrencyViewModel: CurrencyViewModel {
         return "\(balance[currency]?.stringValue(rounding: 1) ?? "") \(currency.rawValue.uppercased())"
     }
     
+    func getSelectedCurrency(row: Int) -> Currency {
+        let currency = isSell ? availableSellCurrencies[row] : availableBuyCurrencies[row]
+        isSell ? (currentSellCurrency = currency) : (currentBuyCurrency = currency)
+        return currency
+    }
+    
     func submitButtonTapped(amount: Decimal) {
         countCommissionFee(amount: amount)
-        let totalAmount = amount + commissionFee
         
+        let totalAmount = amount + commissionFee
         if balance[currentSellCurrency] ?? 0 < totalAmount {
             innerShowAlertRelay.accept("Unfortunately, balance isn't enough.")
             return
         }
         
-        let parameters: ExchangeGatewayParameters = .init(amount: amount, fromCurrency: currentSellCurrency.rawValue, toCurrency: currentSellCurrency.rawValue)
-        calculateRates(with: parameters)
+        let parameters: ExchangeGatewayParameters = .init(amount: amount, fromCurrency: currentSellCurrency.rawValue, toCurrency: currentBuyCurrency.rawValue)
+        calculateRate(with: parameters)
     }
     
-    private func countCommissionFee(amount: Decimal) {
-        if convertCount > 4 { //on the sixth convert convertCount value will be 5 because it increase when response comes.
-            commissionFee = amount * commissionPercent
-        }
-    }
-    
-    private func calculateRates(
+    // MARK: Requests
+    private func calculateRate(
         with parameters: ExchangeGatewayParameters
     ) {
         ExchangeNetworkGateway().fetch(with: parameters, completion: { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let entity):
+                self.convertCount += 1
+                self.innerShowAlertRelay.accept(self.getSuccessCalculatedRateText(amount: parameters.amount, entity: entity))
                 self.innerRateDidLoad.accept(entity)
+                self.updateBalance(parameters.amount, entity)
             case .failure(let error):
+                print(error.localizedDescription)
                 self.innerShowAlertRelay.accept("Something happened. Please, Try again later.")
             }
         })
+    }
+    
+    //MARK: Helper Methods
+    private func filterAvailableCurrencies() {
+        let currencyToFilter = isSell ? currentSellCurrency: currentBuyCurrency
+        let currencies =  Currency.allCases.filter { currency in
+            return currency != currencyToFilter
+        }
+        
+        isSell ? (availableSellCurrencies = currencies) : (availableBuyCurrencies = currencies)
+    }
+    
+    private func countCommissionFee(amount: Decimal) {
+        if convertCount > 4 {
+            commissionFee = amount * commissionPercent
+        }
+    }
+    
+    private func updateBalance(_ amount: Decimal, _ entity: ExchangeEntity) {
+        guard let currentSellCurrencyBalance = balance[currentSellCurrency],
+              let currentBuyCurrencyBalance = balance[currentBuyCurrency],
+              let inputedAmount = Decimal(string: entity.amount) else { return }
+        
+        balance[currentSellCurrency] = currentSellCurrencyBalance - (amount + commissionFee)
+        balance[currentBuyCurrency] = currentBuyCurrencyBalance + inputedAmount
+    }
+    
+    private func getSuccessCalculatedRateText(amount: Decimal, entity: ExchangeEntity) -> String {
+        return "You have converted \(amount) \(currentSellCurrency.rawValue) to \(entity.amount) \(entity.currency). Commission Fee - \(commissionFee.stringValue())  \(currentSellCurrency.rawValue)"
     }
 }

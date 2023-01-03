@@ -20,9 +20,13 @@ struct ExchangeNetworkGateway: ExchangeGateway {
                 let jsonDecoder = JSONDecoder()
                 do {
                     let exchange = try jsonDecoder.decode(ExchangeEntity.self, from: data)
-                    completion(.success(exchange))
+                    DispatchQueue.main.sync {
+                        completion(.success(exchange))
+                    }
                 } catch {
-                    completion(.failure(error))
+                    DispatchQueue.main.sync {
+                        completion(.failure(error))
+                    }
                 }
             }
         }.resume()

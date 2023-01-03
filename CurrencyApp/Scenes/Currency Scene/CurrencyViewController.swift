@@ -45,17 +45,21 @@ class CurrencyViewController: UIViewController {
     // MARK: Setup
     private func setupObservables() {
         viewModel.rateDidLoad.subscribe(onNext: { [weak self] rate in
-            print(rate, "dasdada")
+            self?.buyCurrencyAmountLabel.text = rate.amount
+            self?.collectionView.reloadData()
+            self?.configureSubmitButton(isEnabled: true)
         }).disposed(by: disposeBag)
         
         viewModel.showAlert.subscribe(onNext: { [weak self] text in
             self?.showAlert(text: text)
+            self?.configureSubmitButton(isEnabled: true)
         }).disposed(by: disposeBag)
     }
     
     private func setUp() {
         setUpView()
         setUpCollectionView()
+        sellCurrencyAmountInputTextField.delegate = self
     }
     
     private func setUpView() {
@@ -65,6 +69,9 @@ class CurrencyViewController: UIViewController {
     }
     
     private func setUpPickerView() {
+        pickerView.removeFromSuperview()
+        toolBar.removeFromSuperview()
+        
         pickerView.delegate = self
         pickerView.dataSource = self
         pickerView.backgroundColor = UIColor.white
@@ -81,6 +88,7 @@ class CurrencyViewController: UIViewController {
     
     @objc func doneButtonTapped() {
         let index = pickerView.selectedRow(inComponent: 0)
+        updateCurrencyButtons(index: index)
         toolBar.removeFromSuperview()
         pickerView.removeFromSuperview()
     }
@@ -91,17 +99,32 @@ class CurrencyViewController: UIViewController {
         collectionView.delegate = self
     }
     
+    private func configureSubmitButton(isEnabled: Bool) {
+        submitButton.isEnabled = isEnabled
+        submitButton.backgroundColor = isEnabled ? .systemBlue : .darkGray
+    }
+    
+    private func updateCurrencyButtons(index: Int) {
+        let currency = viewModel.getSelectedCurrency(row: index)
+        let button = viewModel.isSell ? sellButton : buyButton
+        button?.setTitle(currency.rawValue.uppercased(), for: .normal)
+    }
+
     //MARK: IBActions
     @IBAction func chooseButtonTappedAtSellView(_ sender: Any) {
+        viewModel.isSell = true
         setUpPickerView()
     }
     
     @IBAction func chooseButtonTappedAtBuyView(_ sender: Any) {
+        viewModel.isSell = false
         setUpPickerView()
     }
     
     @IBAction func submitButtonTapped(_ sender: Any) {
-        viewModel.submitButtonTapped(amount: Decimal(20))
+        guard let amount = Decimal(string: sellCurrencyAmountInputTextField.text ?? "") else { return }
+        configureSubmitButton(isEnabled: false)
+        viewModel.submitButtonTapped(amount: amount)
     }
 }
 
@@ -130,5 +153,17 @@ extension CurrencyViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         viewModel.pickerViewTitleForRow(row: row)
+    }
+}
+
+//MARK: text field Delegate
+extension CurrencyViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let text = (textField.text ?? "") as NSString
+        let newText = text.replacingCharacters(in: range, with: string)
+        if let regex = try? NSRegularExpression(pattern: "^[0-9]*((\\.|,)[0-9]{0,2})?$", options: .caseInsensitive) {
+            return regex.numberOfMatches(in: newText, options: .reportProgress, range: NSRange(location: 0, length: (newText as NSString).length)) > 0
+        }
+        return false
     }
 }
