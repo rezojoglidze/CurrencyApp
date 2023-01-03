@@ -2,7 +2,7 @@
 //  MyBalancesCell.swift
 //  CurrencyiOS
 //
-//  Created by Rezo Joglidze on 05.03.22.
+//  Created by Rezo Joglidze on 03.01.23.
 //
 
 import UIKit

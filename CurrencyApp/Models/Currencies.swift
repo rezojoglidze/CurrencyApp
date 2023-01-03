@@ -8,7 +8,7 @@
 import Foundation
 
 enum Currencies: String, CaseIterable {
-    case eur
-    case usd
-    case jpy
+    case EUR
+    case USD
+    case JPY
 }

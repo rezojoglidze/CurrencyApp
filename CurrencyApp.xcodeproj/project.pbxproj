@@ -17,6 +17,10 @@
 		A9638E722964332A00FE82AD /* MyBalancesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9638E702964332A00FE82AD /* MyBalancesCell.swift */; };
 		A9638E742964333000FE82AD /* Currency.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9638E732964333000FE82AD /* Currency.storyboard */; };
 		A9638E77296433EC00FE82AD /* Currencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9638E76296433EC00FE82AD /* Currencies.swift */; };
+		A9638E7B2964412900FE82AD /* ExchangeGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9638E7A2964412900FE82AD /* ExchangeGateway.swift */; };
+		A9638E7D2964413300FE82AD /* ExchangeEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9638E7C2964413300FE82AD /* ExchangeEntity.swift */; };
+		A9638E7F2964413D00FE82AD /* ExchangeNetworkGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9638E7E2964413D00FE82AD /* ExchangeNetworkGateway.swift */; };
+		A9638E832964431C00FE82AD /* ExchangeGatewayParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9638E822964431C00FE82AD /* ExchangeGatewayParameters.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +36,10 @@
 		A9638E702964332A00FE82AD /* MyBalancesCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyBalancesCell.swift; sourceTree = "<group>"; };
 		A9638E732964333000FE82AD /* Currency.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Currency.storyboard; sourceTree = "<group>"; };
 		A9638E76296433EC00FE82AD /* Currencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currencies.swift; sourceTree = "<group>"; };
+		A9638E7A2964412900FE82AD /* ExchangeGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeGateway.swift; sourceTree = "<group>"; };
+		A9638E7C2964413300FE82AD /* ExchangeEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeEntity.swift; sourceTree = "<group>"; };
+		A9638E7E2964413D00FE82AD /* ExchangeNetworkGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeNetworkGateway.swift; sourceTree = "<group>"; };
+		A9638E822964431C00FE82AD /* ExchangeGatewayParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeGatewayParameters.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +74,7 @@
 			children = (
 				A9638E672964329D00FE82AD /* App Control */,
 				A9638E68296432C500FE82AD /* Scenes */,
+				A9638E78296440DE00FE82AD /* Gateways */,
 				A9638E75296433DB00FE82AD /* Models */,
 				A9638E662964276C00FE82AD /* Resourcess */,
 			);
@@ -125,6 +134,25 @@
 				A9638E76296433EC00FE82AD /* Currencies.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		A9638E78296440DE00FE82AD /* Gateways */ = {
+			isa = PBXGroup;
+			children = (
+				A9638E79296440F400FE82AD /* Exchange */,
+			);
+			path = Gateways;
+			sourceTree = "<group>";
+		};
+		A9638E79296440F400FE82AD /* Exchange */ = {
+			isa = PBXGroup;
+			children = (
+				A9638E7A2964412900FE82AD /* ExchangeGateway.swift */,
+				A9638E822964431C00FE82AD /* ExchangeGatewayParameters.swift */,
+				A9638E7C2964413300FE82AD /* ExchangeEntity.swift */,
+				A9638E7E2964413D00FE82AD /* ExchangeNetworkGateway.swift */,
+			);
+			path = Exchange;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -200,11 +228,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9638E77296433EC00FE82AD /* Currencies.swift in Sources */,
+				A9638E7B2964412900FE82AD /* ExchangeGateway.swift in Sources */,
 				A9638E6D2964332300FE82AD /* CurrencyViewModel.swift in Sources */,
+				A9638E7F2964413D00FE82AD /* ExchangeNetworkGateway.swift in Sources */,
 				A9638E722964332A00FE82AD /* MyBalancesCell.swift in Sources */,
 				A9638E6C2964332300FE82AD /* CurrencyViewController.swift in Sources */,
 				A9239484296427380000CB5D /* AppDelegate.swift in Sources */,
 				A9239486296427380000CB5D /* SceneDelegate.swift in Sources */,
+				A9638E7D2964413300FE82AD /* ExchangeEntity.swift in Sources */,
+				A9638E832964431C00FE82AD /* ExchangeGatewayParameters.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
