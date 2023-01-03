@@ -8,12 +8,11 @@
 import UIKit
 
 class BalanceCell: UICollectionViewCell {
-    
     // MARK: IBOutlets
-    @IBOutlet weak var amountWithCurrencyLbl: UILabel!
+    @IBOutlet private weak var amountLabel: UILabel!
     
     //MARK: Methods
     func fill(text: String) {
-        self.amountWithCurrencyLbl.text = text
+        amountLabel.text = text
     }
 }

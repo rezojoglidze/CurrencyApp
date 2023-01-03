@@ -22,6 +22,7 @@
 		A9638E7F2964413D00FE82AD /* ExchangeNetworkGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9638E7E2964413D00FE82AD /* ExchangeNetworkGateway.swift */; };
 		A9638E832964431C00FE82AD /* ExchangeGatewayParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9638E822964431C00FE82AD /* ExchangeGatewayParameters.swift */; };
 		A9638E8729644AEB00FE82AD /* UIViewController.Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9638E8629644AEB00FE82AD /* UIViewController.Keyboard.swift */; };
+		A9D60C3C29645EE70014510B /* Decimal.Rounding.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D60C3B29645EE70014510B /* Decimal.Rounding.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		A9638E7E2964413D00FE82AD /* ExchangeNetworkGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeNetworkGateway.swift; sourceTree = "<group>"; };
 		A9638E822964431C00FE82AD /* ExchangeGatewayParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeGatewayParameters.swift; sourceTree = "<group>"; };
 		A9638E8629644AEB00FE82AD /* UIViewController.Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.Keyboard.swift; sourceTree = "<group>"; };
+		A9D60C3B29645EE70014510B /* Decimal.Rounding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decimal.Rounding.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				A9638E8629644AEB00FE82AD /* UIViewController.Keyboard.swift */,
+				A9D60C3B29645EE70014510B /* Decimal.Rounding.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -238,6 +241,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9D60C3C29645EE70014510B /* Decimal.Rounding.swift in Sources */,
 				A9638E77296433EC00FE82AD /* Currency.swift in Sources */,
 				A9638E7B2964412900FE82AD /* ExchangeGateway.swift in Sources */,
 				A9638E6D2964332300FE82AD /* CurrencyViewModel.swift in Sources */,

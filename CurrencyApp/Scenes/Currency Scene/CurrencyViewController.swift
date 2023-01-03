@@ -67,7 +67,6 @@ class CurrencyViewController: UIViewController {
     
     @objc func doneButtonTapped() {
         let index = pickerView.selectedRow(inComponent: 0)
-        //        updateCurrencyButtons(index: index)
         toolBar.removeFromSuperview()
         pickerView.removeFromSuperview()
     }
@@ -86,6 +85,10 @@ class CurrencyViewController: UIViewController {
     @IBAction func chooseButtonTappedAtBuyView(_ sender: Any) {
         setUpPickerView()
     }
+    
+    @IBAction func submitButtonTapped(_ sender: Any) {
+        viewModel.submitButtonTapped(amount: Decimal(2))
+    }
 }
 
 //MARK: Collection View DataSource and Delegate
@@ -96,7 +99,7 @@ extension CurrencyViewController: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: BalanceCell.self), for: indexPath) as? BalanceCell
-        cell?.fill(text: "11")
+        cell?.fill(text: viewModel.getBalanceInfo(with: indexPath.row))
         return cell ?? UICollectionViewCell()
     }
 }

@@ -62,6 +62,9 @@
                                                         <integer key="value" value="0"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="submitButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vxh-V4-r0W"/>
+                                                </connections>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JzN-Lz-8du" userLabel="Amount Convert View">
                                                 <rect key="frame" x="0.0" y="154" width="414" height="180"/>

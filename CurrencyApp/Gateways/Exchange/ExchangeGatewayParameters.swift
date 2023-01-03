@@ -10,7 +10,7 @@ import Foundation
 // MARK: - Exchange Gateway Parameters
 struct ExchangeGatewayParameters {
     // MARK: Properties
-    let amount: Double
+    let amount: Decimal
     let fromCurrency: String
     let toCurrency: String
 }
