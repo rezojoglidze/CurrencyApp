@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class CurrencyViewController: UIViewController {
     
@@ -23,6 +25,7 @@ class CurrencyViewController: UIViewController {
     private var viewModel: CurrencyViewModel!
     private lazy var pickerView: UIPickerView = UIPickerView()
     private lazy var toolBar = UIToolbar()
+    private lazy var disposeBag = DisposeBag()
     
     //MARK: Instantiate
     static func instantiate(viewModel: CurrencyViewModel) -> CurrencyViewController {
@@ -36,9 +39,20 @@ class CurrencyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUp()
+        setupObservables()
     }
     
     // MARK: Setup
+    private func setupObservables() {
+        viewModel.rateDidLoad.subscribe(onNext: { [weak self] rate in
+            print(rate, "dasdada")
+        }).disposed(by: disposeBag)
+        
+        viewModel.showAlert.subscribe(onNext: { [weak self] text in
+            self?.showAlert(text: text)
+        }).disposed(by: disposeBag)
+    }
+    
     private func setUp() {
         setUpView()
         setUpCollectionView()
@@ -87,7 +101,7 @@ class CurrencyViewController: UIViewController {
     }
     
     @IBAction func submitButtonTapped(_ sender: Any) {
-        viewModel.submitButtonTapped(amount: Decimal(2))
+        viewModel.submitButtonTapped(amount: Decimal(20))
     }
 }
 
