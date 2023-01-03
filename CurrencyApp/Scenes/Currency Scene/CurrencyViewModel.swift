@@ -7,7 +7,27 @@
 
 import Foundation
 
+protocol CurrencyViewModel {
+    var pickerViewNumberOfRowsInComponent: Int { get }
+    func pickerViewTitleForRow(row: Int) -> String
+    
+    var collectionViewNumberOfItems: Int { get }
+}
 
-class CurrencyViewModel {
+final class DefaultCurrencyViewModel {
 
+}
+
+extension DefaultCurrencyViewModel: CurrencyViewModel {
+    var pickerViewNumberOfRowsInComponent: Int {
+        Currency.allCases.count
+    }
+    
+    func pickerViewTitleForRow(row: Int) -> String {
+        Currency.allCases[row].rawValue
+    }
+    
+    var collectionViewNumberOfItems: Int {
+        Currency.allCases.count
+    }
 }

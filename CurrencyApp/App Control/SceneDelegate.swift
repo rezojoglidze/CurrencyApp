@@ -27,7 +27,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     // MARK: Root View Controller
-    func createRootViewController() -> UIViewController {
-        CurrencyViewController.instantiate()
+    private func createRootViewController() -> UIViewController {
+        CurrencyViewController.instantiate(viewModel: createCurrencyViewModel())
+    }
+    
+    private func createCurrencyViewModel() -> CurrencyViewModel {
+        DefaultCurrencyViewModel()
     }
 }
