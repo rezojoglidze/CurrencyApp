@@ -42,6 +42,16 @@ class CurrencyViewController: UIViewController {
         setupObservables()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setUpKeyboardObservers()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        removeKeyboardObservers()
+    }
+    
     // MARK: Setup
     private func setupObservables() {
         viewModel.rateDidLoad.subscribe(onNext: { [weak self] rate in
@@ -125,6 +135,32 @@ class CurrencyViewController: UIViewController {
         guard let amount = Decimal(string: sellCurrencyAmountInputTextField.text ?? "") else { return }
         configureSubmitButton(isEnabled: false)
         viewModel.submitButtonTapped(amount: amount)
+    }
+    
+    //MARK: Keyboard
+    private func setUpKeyboardObservers() {
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+    }
+    
+    @objc private func adjustForKeyboard(notification: Notification) {
+        guard let keyboardValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+        
+        let keyboardScreenEndFrame = keyboardValue.cgRectValue
+        let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, from: view.window)
+        
+        if notification.name == UIResponder.keyboardWillHideNotification {
+            self.scrollView.contentSize = CGSize(width: view.frame.width, height: self.scrollView.frame.height)
+        } else {
+            self.scrollView.contentSize = CGSize(width: view.frame.width, height: self.scrollView.frame.height + keyboardViewEndFrame.height)
+        }
+        view.layoutIfNeeded()
+    }
+    
+    private func removeKeyboardObservers() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 }
 
