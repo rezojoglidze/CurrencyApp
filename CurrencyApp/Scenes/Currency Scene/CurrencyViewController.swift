@@ -98,6 +98,7 @@ class CurrencyViewController: UIViewController {
     
     @objc func doneButtonTapped() {
         let index = pickerView.selectedRow(inComponent: 0)
+        buyCurrencyAmountLabel.text = "---"
         updateCurrencyButtons(index: index)
         toolBar.removeFromSuperview()
         pickerView.removeFromSuperview()
@@ -201,5 +202,9 @@ extension CurrencyViewController: UITextFieldDelegate {
             return regex.numberOfMatches(in: newText, options: .reportProgress, range: NSRange(location: 0, length: (newText as NSString).length)) > 0
         }
         return false
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        buyCurrencyAmountLabel.text = "---"
     }
 }

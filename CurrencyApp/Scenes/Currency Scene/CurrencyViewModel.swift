@@ -72,9 +72,7 @@ final class DefaultCurrencyViewModel {
 extension DefaultCurrencyViewModel: CurrencyViewModel {
     //MARK: Currency View Model Protocol
     var pickerViewNumberOfRowsInComponent: Int {
-        filterAvailableCurrencies()
-        let currencies = isSell ? availableSellCurrencies : availableBuyCurrencies
-        return currencies.count
+        getPickerViewNumberOfRowsInComponent()
     }
     
     func pickerViewTitleForRow(row: Int) -> String {
@@ -129,10 +127,16 @@ extension DefaultCurrencyViewModel: CurrencyViewModel {
     }
     
     //MARK: Helper Methods
+    private func getPickerViewNumberOfRowsInComponent() -> Int {
+        filterAvailableCurrencies()
+        let currencies = isSell ? availableSellCurrencies : availableBuyCurrencies
+        return currencies.count
+    }
+    
     private func filterAvailableCurrencies() {
-        let currencyToFilter = isSell ? currentSellCurrency: currentBuyCurrency
+        let currentCurrency = isSell ? currentSellCurrency: currentBuyCurrency
         let currencies =  Currency.allCases.filter { currency in
-            return currency != currencyToFilter
+            return currency != currentCurrency
         }
         
         isSell ? (availableSellCurrencies = currencies) : (availableBuyCurrencies = currencies)
