@@ -40,6 +40,7 @@ class CurrencyViewController: UIViewController {
         super.viewDidLoad()
         setUp()
         setupObservables()
+        configureSubmitButton(isEnabled: false)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -61,7 +62,7 @@ class CurrencyViewController: UIViewController {
         }).disposed(by: disposeBag)
         
         viewModel.showAlert.subscribe(onNext: { [weak self] text in
-            self?.showAlert(text: text)
+            self?.showAlert(message: text)
             self?.configureSubmitButton(isEnabled: true)
         }).disposed(by: disposeBag)
     }
@@ -112,7 +113,7 @@ class CurrencyViewController: UIViewController {
     
     private func configureSubmitButton(isEnabled: Bool) {
         submitButton.isEnabled = isEnabled
-        submitButton.backgroundColor = isEnabled ? .systemBlue : .darkGray
+        submitButton.backgroundColor = isEnabled ? .systemBlue : .lightGray.withAlphaComponent(0.5)
     }
     
     private func updateCurrencyButtons(index: Int) {
@@ -195,7 +196,11 @@ extension CurrencyViewController: UIPickerViewDelegate, UIPickerViewDataSource {
 
 //MARK: text field Delegate
 extension CurrencyViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
         let text = (textField.text ?? "") as NSString
         let newText = text.replacingCharacters(in: range, with: string)
         if let regex = try? NSRegularExpression(pattern: "^[0-9]*((\\.|,)[0-9]{0,2})?$", options: .caseInsensitive) {
@@ -206,5 +211,7 @@ extension CurrencyViewController: UITextFieldDelegate {
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         buyCurrencyAmountLabel.text = "---"
+        let isEnabled = textField.text?.isEmpty == false
+        configureSubmitButton(isEnabled: isEnabled)
     }
 }

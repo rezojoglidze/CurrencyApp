@@ -148,7 +148,10 @@ extension DefaultCurrencyViewModel: CurrencyViewModel {
         }
     }
     
-    private func updateBalance(_ amount: Decimal, _ entity: ExchangeEntity) {
+    private func updateBalance(
+        _ amount: Decimal,
+        _ entity: ExchangeEntity
+    ) {
         guard let currentSellCurrencyBalance = balance[currentSellCurrency],
               let currentBuyCurrencyBalance = balance[currentBuyCurrency],
               let inputedAmount = Decimal(string: entity.amount) else { return }
@@ -157,7 +160,10 @@ extension DefaultCurrencyViewModel: CurrencyViewModel {
         balance[currentBuyCurrency] = currentBuyCurrencyBalance + inputedAmount
     }
     
-    private func getSuccessCalculatedRateText(amount: Decimal, entity: ExchangeEntity) -> String {
+    private func getSuccessCalculatedRateText(
+        amount: Decimal,
+        entity: ExchangeEntity
+    ) -> String {
         return "You have converted \(amount) \(currentSellCurrency.rawValue) to \(entity.amount) \(entity.currency). Commission Fee - \(commissionFee.stringValue())  \(currentSellCurrency.rawValue)"
     }
 }
