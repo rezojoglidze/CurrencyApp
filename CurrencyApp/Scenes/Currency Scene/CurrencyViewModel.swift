@@ -89,9 +89,7 @@ extension DefaultCurrencyViewModel: CurrencyViewModel {
     }
     
     func getSelectedCurrency(row: Int) -> Currency {
-        let currency = isSell ? availableSellCurrencies[row] : availableBuyCurrencies[row]
-        isSell ? (currentSellCurrency = currency) : (currentBuyCurrency = currency)
-        return currency
+        isSell ? updateAndGetCurrentSellCurrency(row: row) : updateAndGetCurrentBuyCurrency(row: row)
     }
     
     func submitButtonTapped(amount: Decimal) {
@@ -140,6 +138,18 @@ extension DefaultCurrencyViewModel: CurrencyViewModel {
         }
         
         isSell ? (availableSellCurrencies = currencies) : (availableBuyCurrencies = currencies)
+    }
+    
+    private func updateAndGetCurrentSellCurrency(row: Int) -> Currency {
+        let currency = availableSellCurrencies[row]
+        currentSellCurrency = currency
+        return currency
+    }
+    
+    private func updateAndGetCurrentBuyCurrency(row: Int) -> Currency {
+        let currency = availableBuyCurrencies[row]
+        currentBuyCurrency = currency
+        return currency
     }
     
     private func countCommissionFee(amount: Decimal) {
